@@ -147,7 +147,7 @@ def find_strings(handle, settings):
 
     # end the last string in the file
     if len(string_) >= settings["minStrLen"]:
-        yield (startPos, string_)
+        yield (stringStartPos, string_)
     string_.clear()
 
 def main():
