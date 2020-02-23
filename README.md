@@ -5,9 +5,12 @@ Find text strings in a binary file.
 *options* *input_file*
 
 ### *options*
-* `-m` *length*, `--minimum-length` *length*
+* `-l` *length*, `--minimum-length` *length*
   * minimum length of strings to find
   * minimum: 1, default: 8
+* `-r` *count*, `--maximum-repeat` *count*
+  * the maximum number a byte is allowed to repeat
+  * minimum: 1, default/maximum: 100
 * `-t` *file*, `--table-file` *file*
   * specifies a "table file" that contains rules for converting bytes in *input_file* into characters to print (see below)
   * if omitted, the program looks for printable ASCII characters (`0x20`&ndash;`0x7e`)
@@ -32,8 +35,7 @@ python findstrings.py test\doom2.exe
 ```
 
 ```
-python findstrings.py --table-file tables\nes-smb1.txt --minimum-length 20 test\smb1.nes
-0x07d2: LWELCOME TO WARP ZONE!
-0x0d8e: MBUT OUR PRINCESS IS IN
-(snip)
+python findstrings.py --table-file tables\nes-smb1.txt --minimum-length 9 --maximum-repeat 2 test\smb1.nes
+0x076c: BWORLD  TIMEW
+0x0795: 9WORLD  - YC
 ```
