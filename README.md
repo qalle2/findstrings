@@ -38,4 +38,5 @@ python findstrings.py test\doom2.exe
 python findstrings.py --table-file tables\nes-smb1.txt --minimum-length 9 --maximum-repeat 2 test\smb1.nes
 0x076c: BWORLD  TIMEW
 0x0795: 9WORLD  - YC
+(snip)
 ```
