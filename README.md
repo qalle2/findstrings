@@ -2,36 +2,33 @@
 Find text strings in a binary file.
 
 ## Syntax
-*options* *input_file*
+```
+usage: findstrings.py [-h] [-l MINSTRLEN] [-r MAXREPCNT] [-t TABLEFILE] [--start-quote STARTQUOTE]
+                      [--end-quote ENDQUOTE]
+                      inputFile
 
-### *options*
-* `-l` *length*, `--minimum-length` *length*
-  * minimum length of strings to find
-  * minimum: 1, default: 8
-* `-r` *count*, `--maximum-repeat` *count*
-  * the maximum number a byte is allowed to repeat
-  * minimum: 1, default/maximum: 100
-* `-t` *file*, `--table-file` *file*
-  * the "table file" that contains rules for converting bytes in *input_file* into characters to print (see below)
-  * default: `tables/ascii.txt` (printable ASCII, i.e., bytes `0x20`&ndash;`0x7e`)
-* `--start-quote` *string*
-  * zero or more characters to print before each found string
-  * default: `"`
-* `--end-quote` *string*
-  * zero or more characters to print after each found string
-  * default: `"`
+Find strings in a binary file.
 
-### *input_file*
-* The binary file to find strings from.
+positional arguments:
+  inputFile             the binary file to find strings from
 
-### Table files
-* format: UTF-8
-* empty lines are ignored
-* comment lines (lines that start with `#`) are ignored
-* each line consists of:
-  * a byte in the input file as two hexadecimal digits (`00`&ndash;`ff`)
-  * a space
-  * the character to print, or a hexadecimal Unicode codepoint (`00`&ndash;`10ffff`, at least two digits)
+optional arguments:
+  -h, --help            show this help message and exit
+  -l MINSTRLEN, --minimum-length MINSTRLEN
+                        minimum length of strings to find (minimum: 1, default: 8)
+  -r MAXREPCNT, --maximum-repeat MAXREPCNT
+                        maximum repeat count of a byte (minimum: 1, default/maximum: 100)
+  -t TABLEFILE, --table-file TABLEFILE
+                        the "table file" that describes how to convert bytes into characters (see below; default:
+                        tables/ascii.txt)
+  --start-quote STARTQUOTE
+                        character(s) to be printed before each string (default: ")
+  --end-quote ENDQUOTE  character(s) to be printed after each string (default: ")
+
+Table files: UTF-8; empty lines and lines starting with "#" are ignored; each line: byte in input file (hexadecimal
+integer 00-ff), space, what to print (a character or a hexadecimal Unicode codepoint with at least two digits, i.e.,
+00-10ffff).
+```
 
 ## Examples
 ```
