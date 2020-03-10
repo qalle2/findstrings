@@ -1,59 +1,56 @@
-"""Find strings in binary files."""
+"""Find strings in a binary file."""
 
-import getopt
-import os.path
+import argparse
+import os
 import sys
 
-def parse_integer(value, maxValue=None):
-    """Parse a string containing an integer from command line."""
-
-    try:
-        value = int(value, 10)
-        if value < 1 or maxValue is not None and value > maxValue:
-            raise ValueError
-    except ValueError:
-        sys.exit("Arguments: invalid integer value.")
-    return value
-
 def parse_arguments():
-    """Parse command line arguments using getopt."""
+    """Parse command line arguments using argparse."""
 
-    longOpts = ("minimum-length=", "maximum-repeat=", "table-file=", "start-quote=", "end-quote=")
-    try:
-        (opts, args) = getopt.getopt(sys.argv[1:], "l:r:t:", longOpts)
-    except getopt.GetoptError:
-        sys.exit("Invalid command line argument.")
+    parser = argparse.ArgumentParser(
+        description="Find strings in a binary file.",
+        epilog="Table files: UTF-8; empty lines and lines starting with \"#\" are ignored; "
+        "each line: byte in input file (hexadecimal integer 00-ff), space, what to print (a "
+        "character or a hexadecimal Unicode codepoint with at least two digits, i.e., 00-10ffff)."
+    )
 
-    opts = dict(opts)
+    parser.add_argument(
+        "-l", "--minimum-length", type=int, default=8, dest="minStrLen",
+        help="minimum length of strings to find (minimum: 1, default: 8)"
+    )
+    parser.add_argument(
+        "-r", "--maximum-repeat", type=int, default=100, dest="maxRepCnt",
+        help="maximum repeat count of a byte (minimum: 1, default/maximum: 100)"
+    )
+    parser.add_argument(
+        "-t", "--table-file", default="tables/ascii.txt", dest="tableFile",
+        help="the \"table file\" that describes how to convert bytes into characters (see below; "
+        "default: tables/ascii.txt)"
+    )
+    parser.add_argument(
+        "--start-quote", default='"', dest="startQuote",
+        help="character(s) to be printed before each string (default: \")"
+    )
+    parser.add_argument(
+        "--end-quote", default='"', dest="endQuote",
+        help="character(s) to be printed after each string (default: \")"
+    )
+    parser.add_argument(
+        "inputFile",
+        help="the binary file to find strings from"
+    )
 
-    # integer arguments
-    minStrLen = parse_integer(opts.get("--minimum-length", opts.get("-l", "8")))
-    maxRepCnt = parse_integer(opts.get("--maximum-repeat", opts.get("-r", "100")), 100)
+    args = parser.parse_args()
 
-    # string arguments
-    startQuote = opts.get("--start-quote", '"')
-    endQuote = opts.get("--end-quote", '"')
+    # additional validation
+    if args.minStrLen < 1:
+        sys.exit("Invalid minimum string length.")
+    if not 1 <= args.maxRepCnt <= 100:
+        sys.exit("Invalid maximum byte repeat count.")
+    if not all(os.path.isfile(file) for file in (args.tableFile, args.inputFile)):
+        sys.exit("The table file or the input file does not exist.")
 
-    # table file
-    tableFile = opts.get("--table-file", opts.get("-t", "tables/ascii.txt"))
-    if not os.path.isfile(tableFile):
-        sys.exit("The table file does not exist.")
-
-    # input file
-    if len(args) != 1:
-        sys.exit("Invalid number of command line arguments.")
-    inputFile = args[0]
-    if not os.path.isfile(inputFile):
-        sys.exit("The input file does not exist.")
-
-    return {
-        "minStrLen": minStrLen,
-        "maxRepCnt": maxRepCnt,
-        "tableFile": tableFile,
-        "startQuote": startQuote,
-        "endQuote": endQuote,
-        "inputFile": inputFile,
-    }
+    return args
 
 def read_table_file_lines(handle):
     """Read a table file. Generate non-empty non-comment lines without trailing newlines."""
@@ -153,14 +150,14 @@ def create_output_format_string(settings):
     """Create a string to .format() the output with."""
 
     try:
-        inputFileSize = os.path.getsize(settings["inputFile"])
+        inputFileSize = os.path.getsize(settings.inputFile)
     except OSError:
         sys.exit("Error getting input file size.")
     if inputFileSize == 0:
         sys.exit("The input file is empty.")
     maxHexPosLen = len(format(inputFileSize - 1, "x"))
     return "0x{{:0{:d}x}}: {:s}{{:s}}{:s}".format(
-        maxHexPosLen, settings["startQuote"], settings["endQuote"]
+        maxHexPosLen, settings.startQuote, settings.endQuote
     )
 
 def main():
@@ -173,7 +170,7 @@ def main():
 
     # read the table file
     try:
-        with open(settings["tableFile"], "rt", encoding="utf8") as handle:
+        with open(settings.tableFile, "rt", encoding="utf8") as handle:
             table = dict(parse_table_file(handle))
     except OSError:
         sys.exit("Error reading the table file.")
@@ -181,9 +178,9 @@ def main():
     # find strings in the input file
     lineFormat = create_output_format_string(settings)
     try:
-        with open(settings["inputFile"], "rb") as handle:
-            for (startPos, bytes_) in find_strings(handle, frozenset(table), settings["maxRepCnt"]):
-                if len(bytes_) >= settings["minStrLen"]:
+        with open(settings.inputFile, "rb") as handle:
+            for (startPos, bytes_) in find_strings(handle, frozenset(table), settings.maxRepCnt):
+                if len(bytes_) >= settings.minStrLen:
                     print(lineFormat.format(startPos, "".join(table[byte] for byte in bytes_)))
     except OSError:
         sys.exit("Error reading the input file.")
