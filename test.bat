@@ -14,4 +14,4 @@ python findstrings.py --table-file tables\nes-smb2.txt --minimum-length 5 --maxi
 echo.
 
 echo === test.bat: smb3.nes ===
-python findstrings.py --table-file tables\nes-smb3.txt --minimum-length 9 --maximum-repeat 8 test\smb3.nes
+python findstrings.py --table-file tables\nes-smb3.txt --minimum-length 9 --maximum-repeat 8 --start-quote "`" --end-quote "'" test\smb3.nes
