@@ -1,3 +1,5 @@
+# Printable ASCII characters, i.e., 0x20-0x7e.
+
 20 0020
 21 !
 22 "
