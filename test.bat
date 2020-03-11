@@ -2,7 +2,7 @@
 cls
 
 echo === test.bat: doom2.exe ===
-python findstrings.py --minimum-length 20 --maximum-repeat 2 test\doom2.exe
+python findstrings.py --minimum-length 20 test\doom2.exe
 if errorlevel 1 goto error
 echo.
 
@@ -12,12 +12,17 @@ if errorlevel 1 goto error
 echo.
 
 echo === test.bat: smb2.nes ===
-python findstrings.py --table-file tables\nes-smb2.txt --minimum-length 5 --maximum-repeat 3 test\smb2.nes
+python findstrings.py --table-file tables\nes-smb2.txt --maximum-repeat 3 test\smb2.nes
 if errorlevel 1 goto error
 echo.
 
 echo === test.bat: smb3.nes ===
-python findstrings.py --table-file tables\nes-smb3.txt --minimum-length 9 --maximum-repeat 8 --start-quote "`" --end-quote "'" test\smb3.nes
+python findstrings.py --table-file tables\nes-smb3.txt --minimum-length 10 test\smb3.nes
+if errorlevel 1 goto error
+echo.
+
+echo === test.bat: repeat.txt ===
+python findstrings.py --maximum-repeat 4 test\repeat.txt
 if errorlevel 1 goto error
 echo.
 
