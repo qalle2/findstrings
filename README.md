@@ -5,7 +5,7 @@ Find text strings in a binary file.
 ```
 usage: findstrings.py [-h] [-l MINIMUM_LENGTH] [-r MAXIMUM_REPEAT] [-t TABLE_FILE] input_file
 
-Find strings in a binary file.
+Find text strings in a binary file.
 
 positional arguments:
   input_file            binary file to find strings from

@@ -1,4 +1,4 @@
-"""Find strings in a binary file."""
+"""Find text strings in a binary file."""
 
 import argparse
 import os
@@ -8,7 +8,7 @@ def parse_arguments():
     """Parse command line arguments using argparse."""
 
     parser = argparse.ArgumentParser(
-        description="Find strings in a binary file.",
+        description="Find text strings in a binary file.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         epilog="Table file: describes how to convert bytes in input file into characters to print: "
         "UTF-8; empty lines and lines starting with \"#\" are ignored; each line: byte "
