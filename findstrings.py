@@ -10,34 +10,35 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description="Find text strings in a binary file.",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        epilog="Table file: describes how to convert bytes in input file into characters to print: "
-        "UTF-8; empty lines and lines starting with \"#\" are ignored; each line: byte "
+        epilog="Table file: specifies how to convert bytes in input file into characters to print: "
+        "UTF-8 text file; empty lines and lines starting with \"#\" are ignored; each line: byte "
         "(hexadecimal integer), space, character or hexadecimal Unicode codepoint (two digits or "
         "more)."
     )
 
     parser.add_argument(
-        "-l", "--minimum-length", type=int, default=8, help="minimum length of strings to find"
+        "-l", "--minimum-length", type=int, default=8, help="Minimum length of strings to find."
     )
     parser.add_argument(
-        "-r", "--maximum-repeat", type=int, default=8, help="maximum repeat count of a byte"
+        "-r", "--maximum-repeat", type=int, default=8, help="Maximum repeat count of a byte."
     )
     parser.add_argument(
-        "-t", "--table-file", default="tables/ascii.txt", help="\"table file\" to use (see below)"
+        "-t", "--table-file", default="tables/ascii.txt", help="\"Table file\" to use (see below)."
     )
     parser.add_argument(
-        "input_file", help="binary file to find strings from"
+        "input_file", help="Binary file to find strings from."
     )
 
     args = parser.parse_args()
 
-    # additional validation
     if args.minimum_length < 1:
         sys.exit("Invalid minimum string length.")
     if args.maximum_repeat < 1:
         sys.exit("Invalid maximum byte repeat count.")
-    if not all(os.path.isfile(file) for file in (args.table_file, args.input_file)):
-        sys.exit("The table file or the input file does not exist.")
+    if not os.path.isfile(args.table_file):
+        sys.exit("Table file not found.")
+    if not os.path.isfile(args.input_file):
+        sys.exit("Input file not found.")
 
     return args
 
@@ -127,49 +128,30 @@ def find_strings(handle, stringBytes, maxRepCnt):
                 byteStr.append(byte)
                 startPos = chunkPos + offset
                 repCnt = 1
-
         # remember the absolute position in the file
         chunkPos += len(chunk)
-
     if byteStr:
         # end the last string in the file
         yield (startPos, byteStr)
 
-def create_output_format_string(settings):
-    """Create a string to .format() the output with."""
-
-    try:
-        inputFileSize = os.path.getsize(settings.input_file)
-    except OSError:
-        sys.exit("Error getting input file size.")
-    if inputFileSize == 0:
-        sys.exit("The input file is empty.")
-    maxHexPosLen = len(format(inputFileSize - 1, "x"))
-    addrFormat = "0x{{:0{:d}x}}".format(maxHexPosLen)
-    return '{addr:s}-{addr:s}: "{{:s}}"'.format(addr=addrFormat)
-
 def main():
     """The main function."""
 
-    if sys.version_info[0] != 3:
-        print("Warning: possibly incompatible Python version.", file=sys.stderr)
-
-    settings = parse_arguments()
+    args = parse_arguments()
 
     # read the table file
     try:
-        with open(settings.table_file, "rt", encoding="utf8") as handle:
+        with open(args.table_file, "rt", encoding="utf8") as handle:
             table = dict(parse_table_file(handle))
     except OSError:
         sys.exit("Error reading the table file.")
 
     # find strings in the input file
-    lineFormat = create_output_format_string(settings)
     try:
-        with open(settings.input_file, "rb") as handle:
-            for (pos, bytes_) in find_strings(handle, set(table), settings.maximum_repeat):
-                if len(bytes_) >= settings.minimum_length:
-                    print(lineFormat.format(
+        with open(args.input_file, "rb") as handle:
+            for (pos, bytes_) in find_strings(handle, set(table), args.maximum_repeat):
+                if len(bytes_) >= args.minimum_length:
+                    print('0x{:04x}-0x{:04x}: "{:s}"'.format(
                         pos, pos + len(bytes_) - 1, "".join(table[byte] for byte in bytes_)
                     ))
     except OSError:
