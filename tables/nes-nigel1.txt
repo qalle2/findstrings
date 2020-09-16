@@ -1,0 +1,39 @@
+# NES Nigel Mansell's World Championship Racing - charset 1
+
+00 0020
+
+dc L
+dd M
+de N
+df O
+e0 P
+e1 Q
+e2 R
+e3 S
+e4 T
+e5 U
+e6 V
+e7 W
+e8 X
+e9 Y
+ea Z
+
+eb 0
+
+ec A
+ed B
+ee C
+ef D
+f0 E
+f1 F
+
+f2 0
+f3 1
+f4 2
+f5 3
+f6 4
+f7 5
+f8 6
+f9 7
+fa 8
+fb 9

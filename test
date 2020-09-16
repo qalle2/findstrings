@@ -1,0 +1,30 @@
+clear
+
+echo "=== doom2.exe ==="
+python3 findstrings.py --minimum-length 20 test-in/doom2.exe
+echo ""
+
+echo "=== smb1.nes ==="
+python3 findstrings.py --table-file tables/nes-smb1.txt --minimum-length 10 --maximum-repeat 3 test-in/smb1.nes
+echo ""
+
+echo "=== smb2.nes ==="
+python3 findstrings.py --table-file tables/nes-smb2.txt --maximum-repeat 3 test-in/smb2.nes
+echo ""
+
+echo "=== smb3.nes ==="
+python3 findstrings.py --table-file tables/nes-smb3.txt --minimum-length 10 test-in/smb3.nes
+echo ""
+
+echo "=== repeat.txt ==="
+python3 findstrings.py --maximum-repeat 4 test-in/repeat.txt
+echo ""
+
+echo "=== empty.dat ==="
+python3 findstrings.py test-in/empty.dat
+echo ""
+
+echo "=== This should cause an error ==="
+python3 findstrings.py --minimum-length 0 test-in/doom2.exe
+echo ""
+
