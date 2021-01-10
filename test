@@ -4,6 +4,10 @@ echo "=== doom2.exe ==="
 python3 findstrings.py --minimum-length 20 test-in/doom2.exe
 echo ""
 
+echo "=== nigel.nes ==="
+python3 findstrings.py --table-file tables/nes-nigel.txt --minimum-length 8 --maximum-repeat 2 test-in/nigel.nes
+echo ""
+
 echo "=== smb1.nes ==="
 python3 findstrings.py --table-file tables/nes-smb1.txt --minimum-length 10 --maximum-repeat 3 test-in/smb1.nes
 echo ""
