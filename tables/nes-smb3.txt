@@ -1,0 +1,65 @@
+# NES Super Mario Bros. 3
+
+81 w
+88 x
+8c y
+8f z
+9a ,
+ab '
+
+b0 A
+b1 B
+b2 C
+b3 D
+b4 E
+b5 F
+b6 G
+b7 H
+b8 I
+b9 J
+ba K
+bb L
+bc M
+bd N
+be O
+bf P
+c0 Q
+c1 R
+c2 S
+c3 T
+c4 U
+c5 V
+c6 W
+c7 X
+c8 Y
+c9 Z
+
+ca q
+cb r
+cc s
+cd t
+ce u
+cf v
+
+d0 a
+d1 b
+d2 c
+d3 d
+d4 e
+d5 f
+d6 g
+d7 h
+d8 i
+d9 j
+da k
+db l
+dc m
+dd n
+de o
+df p
+
+e9 .
+ea !
+eb ?
+
+fe 0020

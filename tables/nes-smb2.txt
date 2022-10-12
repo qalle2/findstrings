@@ -1,0 +1,47 @@
+# NES Super Mario Bros. 2
+
+cf .
+
+d0 0
+d1 1
+d2 2
+d3 3
+d4 4
+d5 5
+d6 6
+d7 7
+d8 8
+d9 9
+
+da A
+db B
+dc C
+dd D
+de E
+df F
+e0 G
+e1 H
+e2 I
+e3 J
+e4 K
+e5 L
+e6 M
+e7 N
+e8 O
+e9 P
+ea Q
+eb R
+ec S
+ed T
+ee U
+ef V
+f0 W
+f1 X
+f2 Y
+f3 Z
+f4 -
+f5 ?
+f6 .
+f7 ,
+
+fb 0020

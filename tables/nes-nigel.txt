@@ -1,0 +1,80 @@
+# NES Nigel Mansell's World Championship Racing
+
+00 0020
+
+55 0020
+
+66 A
+67 B
+68 C
+69 D
+6a E
+6b F
+6c G
+6d H
+6e I
+6f J
+70 K
+71 L
+72 M
+73 N
+74 O
+75 P
+76 Q
+77 R
+78 S
+79 T
+7a U
+7b V
+7c W
+7d X
+7e Y
+7f Z
+
+d1 A
+d2 B
+d3 C
+d4 D
+d5 E
+d6 F
+d7 G
+d8 H
+d9 I
+da J
+db K
+dc L
+dd M
+de N
+df O
+e0 P
+e1 Q
+e2 R
+e3 S
+e4 T
+e5 U
+e6 V
+e7 W
+e8 X
+e9 Y
+ea Z
+
+eb 0
+
+ec A
+ed B
+ee C
+ef D
+f0 E
+f1 F
+
+f2 0
+f3 1
+f4 2
+f5 3
+f6 4
+f7 5
+f8 6
+f9 7
+fa 8
+fb 9
+
