@@ -20,7 +20,7 @@ options:
 ```
 
 ## Table files
-A *table file* is a UTF-8 text file specifies how to convert bytes in the
+A *table file* is a UTF-8 text file that specifies how to convert bytes in the
 binary file into printable characters.
 
 Each line consists of:
