@@ -2,12 +2,7 @@ import argparse, os, sys
 
 def parse_arguments():
     parser = argparse.ArgumentParser(
-        description="Find text strings in a binary file. Note: addresses are "
-        "hexadecimal.",
-        epilog="Table file: specifies how to convert bytes into printable "
-        "characters; UTF-8; each line: byte (hexadecimal integer), space, "
-        "character or hexadecimal Unicode codepoint (2 digits or more); empty "
-        "lines, lines starting with '#' and trailing whitespace are ignored."
+        description="Find text strings in a binary file and print them."
     )
 
     parser.add_argument(
@@ -20,8 +15,7 @@ def parse_arguments():
     )
     parser.add_argument(
         "-t", "--table-file",
-        help="'Table file' to read (see below). Default=none "
-        "(printable ASCII, i.e., bytes 0x20-0x7e)."
+        help="'Table file' to read (see README.md). Default=none."
     )
     parser.add_argument(
         "input_file", help="Binary file to read and find strings in."
@@ -41,23 +35,25 @@ def parse_arguments():
     return args
 
 def read_table_file(handle):
-    # read table file; generate non-empty non-comment lines without trailing
-    # whitespace
+    # generate lines from file without BOM, trailing whitespace and comments
 
     handle.seek(0)
-    yield from(
-        l.rstrip() for l in handle if l.rstrip() and not l.startswith("#")
-    )
+    for (i, line) in enumerate(handle):
+        if i == 0:
+            line = line.lstrip("\ufeff")  # strip BOM
+        line = line.rstrip()
+        if line and not line.startswith("#"):
+            yield line
 
-def parse_hexadecimal_integer(value, maxValue):
+def parse_hexadecimal_integer(stri, maxValue):
     # parse a hexadecimal integer from the table file
 
     try:
-        value = int(value, 16)
+        value = int(stri, 16)
         if not 0 <= value <= maxValue:
             raise ValueError
     except ValueError:
-        sys.exit("Invalid hexadecimal integer in table file.")
+        sys.exit("Invalid hexadecimal integer in table file: " + stri)
     return value
 
 def parse_table_file(handle):
@@ -66,7 +62,7 @@ def parse_table_file(handle):
     for line in read_table_file(handle):
         parts = line.split(" ")
         if len(parts) != 2:
-            sys.exit("Syntax error in table file.")
+            sys.exit("Syntax error in table file on line: " + line)
 
         (byte, char) = parts
         byte = parse_hexadecimal_integer(byte, 0xff)
@@ -143,6 +139,8 @@ def main():
         try:
             with open(args.table_file, "rt", encoding="utf8") as handle:
                 table = dict(parse_table_file(handle))
+        except UnicodeDecodeError:
+            sys.exit("The table file is not a valid UTF-8 text file.")
         except OSError:
             sys.exit("Error reading table file.")
 
@@ -153,7 +151,7 @@ def main():
                 handle, set(table), args.maximum_repeat
             ):
                 if len(bytes_) >= args.minimum_length:
-                    print('{:04x}-{:04x}: «{:s}»'.format(
+                    print('0x{:04x}-0x{:04x}: «{:s}»'.format(
                         pos,
                         pos + len(bytes_) - 1,
                         "".join(table[byte] for byte in bytes_)

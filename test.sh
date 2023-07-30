@@ -1,7 +1,7 @@
 clear
 
-echo "=== doom2.exe ==="
-python3 findstrings.py -l 20 test/doom2.exe
+echo "=== doom.exe ==="
+python3 findstrings.py -l 20 test/doom.exe
 echo
 
 echo "=== nigel.nes ==="
@@ -28,6 +28,10 @@ echo "=== empty.dat ==="
 python3 findstrings.py test/empty.dat
 echo
 
-echo "=== This should cause an error ==="
-python3 findstrings.py -l 0 test/doom2.exe
+echo "=== These should cause four distinct errors ==="
+python3 findstrings.py -l 0 test/empty.dat
+python3 findstrings.py -t tables/error-utf16.txt test/empty.dat
+python3 findstrings.py -t tables/error-syntax1.txt test/empty.dat
+python3 findstrings.py -t tables/error-syntax2.txt test/empty.dat
+
 echo
